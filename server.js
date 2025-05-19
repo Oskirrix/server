@@ -1,0 +1,30 @@
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+const activeUsers = new Map(); // Przechowuje nicki i czas ostatniej aktywności
+
+app.post('/register', (req, res) => {
+  const { nick } = req.body;
+  if (!nick) return res.status(400).send('Brak nicku');
+  activeUsers.set(nick, Date.now());
+  res.send('Zarejestrowano');
+});
+
+app.get('/active', (req, res) => {
+  // Usuń nieaktywnych graczy (np. po 10 minutach)
+  const now = Date.now();
+  activeUsers.forEach((time, nick) => {
+    if (now - time > 600000) activeUsers.delete(nick);
+  });
+  res.json([...activeUsers.keys()]);
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Serwer działa na porcie ${PORT}`);
+});
+
