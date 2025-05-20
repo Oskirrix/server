@@ -6,7 +6,7 @@ app.use(cors());
 app.use(express.json());
 
 const activeUsers = new Map(); // Przechowuje nicki i czas ostatniej aktywności
-const INACTIVITY_TIMEOUT = 30 * 1000; // 30 sekund nieaktywności
+const INACTIVITY_TIMEOUT = 20 * 1000; // 20 sekund nieaktywności
 
 app.post('/register', (req, res) => {
   const { nick } = req.body;
